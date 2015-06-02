@@ -12,39 +12,43 @@ var server = http.createServer(function(request, response) {
 	response.writeHead(200);
 	if (action=="keeexit")
 	{
-	
-		if (!path && fs.existsSync(path))
+		if (path && fs.existsSync(path))
 		{
 			response.writeHead(200);
 			/*TODO
 			return the path to the keeexed file or its content
-			*/			
+			*/
+			response.write("This must be path to the keeexed file");
 		}
 		else
 		{
 			//return bad request
 			response.writeHead(400);
+			response.write("bad argument for keeex");
 		}
 	}
 	else if (action=="verify")
 	{
-		if (!path && fs.existsSync(path))
+		if (path && fs.existsSync(path))
 		{			
 			response.writeHead(200);
 			/*TODO
 			return whether the file is in the lastest version
 			*/
+			response.write("This must be true or false");
 		}
 		else
 		{
 			//return bad request
 			response.writeHead(400);
+			response.write("bad argument for verify");
 		}
 	}
 	else
 	{
 		//action not supported		
 		response.writeHead(404);
+		response.write("action not supported");
 	}
 	response.end();
 	

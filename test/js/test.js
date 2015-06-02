@@ -1,14 +1,10 @@
 var http = require('http');
 
-
 function getStatusCode(request, callback) {
     var options = {
         host: "127.0.0.1",
         port: 3000,
         path: request,
-        headers: {
-            Host: request
-        }
     };
     http.get(options, function(response) {
         callback(response.statusCode);

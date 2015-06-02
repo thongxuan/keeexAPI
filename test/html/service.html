@@ -1,1 +1,120 @@
-THONG
+<html>
+	<head>
+		<title>Test KeeeX API</title>		
+		<script>
+			var http = require('http');
+			
+			//call service and pass returned values to callback function
+			function callService(address, port, action, path, callback, errorhandler) {				
+				var request="/keeex?action="+action+"&path="+path;
+				var options = {
+					host: address,
+					port: port,
+					path: request
+				};
+				var result = http.get(options, function(response) 
+				{		
+					var returnCode = response.statusCode;
+					var returnValue = "";
+					response.on('data', function(chunk) 
+					{
+						returnValue+=chunk;
+					});
+ 
+					response.on('end', function() {
+						callback(returnCode, returnValue);
+					});					
+				});
+				
+				result.on("error", errorhandler);
+			}
+
+			//callback function to proceed returned values
+			function proceedResult(code, value)
+			{
+				document.getElementById("txtReturnCode").value=code;
+				document.getElementById("txtReturnValue").value=value;
+			}
+			
+			//this function to handler error in case of not responding
+			function errorHandler()
+			{
+				document.getElementById("txtReturnCode").value="Cant connect to server";
+				document.getElementById("txtReturnValue").value="Cant connect to server";
+			}			
+			//
+			
+			//call service with arguments from html
+			function test()
+			{
+				var action = document.getElementById("optAction").value;
+				var path = document.getElementById("file").value;
+				var address = document.getElementById("txtHostAddress").value;
+				var port = document.getElementById("txtPort").value;				
+				callService(address, port, action, path, proceedResult, errorHandler);								
+			}
+		</script>
+	</head>
+	<body>
+		<table>
+			<tr>
+				<td>
+					Host address
+				</td>
+				<td>
+					<input id="txtHostAddress" type="text" value="127.0.0.1"/>
+				</td>
+			</tr>
+			<tr>
+				<td>
+					Port
+				</td>
+				<td>
+					<input id="txtPort" type="text" value="3000"/>
+				</td>
+			</tr>
+			<tr>
+				<td>
+					Action
+				</td>
+				<td>
+					<select id="optAction">
+						<option value="keeexit">Keeexit</option>
+						<option value="verify">Verify last version</option>
+					</select>
+				</td>
+			</tr>
+			<tr>
+				<td>
+					File path
+				</td>
+				<td>
+					<input id="file" type="file"/>
+				</td>
+			</tr>
+			<tr>			
+				<td colspan="2" style="text-align:right">
+					<input type="button" value="Test" onclick="test()"/>
+				</td>
+			</tr>
+			<hr/>
+			<tr>
+				<td>
+					Return code
+				</td>
+				<td>
+					<input id="txtReturnCode" type="text" editable="false"/>
+				</td>
+			</tr>
+			<tr>
+				<td>
+					Return value
+				</td>
+				<td>
+					<input id="txtReturnValue" type="text" editable="false"/>
+				</td>
+			</tr>
+		</table>
+	</body>
+
+</html>
